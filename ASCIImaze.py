@@ -107,6 +107,20 @@ class Maze:
 
 
 def main():
+    # Map 1. LLM had an easier time.
+    # maze_map = [
+    #     '#########',
+    #     '#       #',
+    #     '# ##### #',
+    #     '# #     #',
+    #     '# #E# # #',
+    #     '# # # #S#',
+    #     '# #   # #',
+    #     '# ##### #',
+    #     '#########',
+    # ]
+
+    # Map 2. Seems like LLMs are having a lot of trouble with this one.
     maze_map = [
         '#########',
         '# ##### #',

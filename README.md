@@ -14,8 +14,7 @@ This project is a maze solver that uses large language models (LLMs) to walk thr
 
 **Clone the repository:**
 `git clone https://github.com/rfwarn/ASCII_LLM_Maze.git`<br>
-cd maze-solver-llms<br>
-**Start the solver:**`python solver.py`<br>
+**Start the solver:** `python ASCIImaze.py`<br>
 Enter a move direction (not case sensitive).
 
 **Example:**
@@ -26,7 +25,6 @@ Enter a move direction (not case sensitive).
 ...
 >>> Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): l
 >>> That move is invalid since there is a wall there.
-...
 >>> Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): 3
 >>> Here is a 3x3 of your current position:
 >>> # #
