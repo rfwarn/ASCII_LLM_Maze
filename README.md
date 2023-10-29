@@ -6,10 +6,10 @@ Welcome to the ASCII maze solver - an innovative platform designed to challenge 
 
 ## Key Features:
 
-- Universal Compatibility: Accommodate ASCII mazes of various sizes.
-- Maze Visualization for LLMs: After every move, the solver produces a comprehensive map displaying the absolute position. This visualization aids in providing precise feedback to Large Language Models and enhances their problem-solving capabilities.
-- Interactive Navigation: Seamlessly input move directions, with the solver offering real-time updates on your current position in the maze.
-- Move Validations: Receive immediate feedback on the legitimacy of your move, ensuring a guided experience.
+- **Universal Compatibility:** Accommodate ASCII mazes of various sizes.
+- **Maze Visualization for LLMs:** After every move, the solver produces a comprehensive map displaying the absolute position. This visualization aids in providing precise feedback to Large Language Models and enhances their problem-solving capabilities.
+- **Interactive Navigation:** Seamlessly input move directions, with the solver offering real-time updates on your current position in the maze.
+- **Move Validations:** Receive immediate feedback on the legitimacy of your move, ensuring a guided experience.
 
 ## Getting Started:
 
