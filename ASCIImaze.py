@@ -3,8 +3,6 @@ class Maze:
         self.maze_map = maze_map
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
-        # self.start_position = (0, 0)
-        # self.end_position = (len(maze_map) - 1, len(maze_map[0]) - 1)
         self.current_position = self.start_position
     
     def get_pos(self, chr):
@@ -61,7 +59,6 @@ class Maze:
     def print_3x3_maze(self):
         maze_map = self.maze_map.copy()
         x, y = self.current_position
-        # maze_map[x][y] = '*'
         maze_map[x] = maze_map[x][:y] + '*' + maze_map[x][y+1:]
         maze_map = maze_map[x-1:x+2]
         arr = []
@@ -74,7 +71,6 @@ class Maze:
     def print_maze(self):
         maze_map = self.maze_map.copy()
         x, y = self.current_position
-        # maze_map[x][y] = '*'
         maze_map[x] = maze_map[x][:y] + '*' + maze_map[x][y+1:]
 
         for row in maze_map:

@@ -13,10 +13,10 @@ This project is a maze solver that uses large language models (LLMs) to walk thr
 ## Usage:
 
 **Clone the repository:**
-`git clone https://github.com/your-username/maze-solver-llms.git`<br>
+`git clone https://github.com/rfwarn/ASCII_LLM_Maze.git`<br>
 cd maze-solver-llms<br>
 **Start the solver:**`python solver.py`<br>
-Enter a move direction or type solve to let the solver solve the maze automatically.
+Enter a move direction (not case sensitive).
 
 **Example:**
 
