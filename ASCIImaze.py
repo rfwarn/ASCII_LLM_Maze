@@ -25,17 +25,6 @@ class Maze:
                 valid_moves.append(new_position)
         return valid_moves
 
-    def move(self, direction):
-        x, y = self.current_position
-        if direction == 'N':
-            self.current_position = (x - 1, y)
-        elif direction == 'S':
-            self.current_position = (x + 1, y)
-        elif direction == 'W':
-            self.current_position = (x, y - 1)
-        elif direction == 'E':
-            self.current_position = (x, y + 1)
-
     def move_next(self, direction):
         x, y = self.current_position
         if direction == 'U':
@@ -100,7 +89,6 @@ class Maze:
             else:
                 print('Good, here you are:')
 
-            # self.move(move)
             self.current_position = move
 
         return True
