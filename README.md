@@ -1,21 +1,22 @@
-# ASCII maze test for LLMs
+# ASCII Maze Solver with LLMs
 
-## Introduction:
+## Overview:
 
-This project is a maze solver that uses large language models (LLMs) to walk through ASCII mazes. The solver updates its position one move at a time and lets the user know if it is an invalid move.
+Welcome to the ASCII maze solver - an innovative platform designed to challenge the problem-solving abilities of Large Language Models (LLMs). With this solver, users can manually navigate through ASCII-based mazes while leveraging LLMs' proficiency in dissecting problems into smaller, more manageable components. This aids in logical navigation and highlights the potential of LLMs in complex reasoning tasks.
 
-## Features:
+## Key Features:
 
-- Supports ASCII mazes of any size
-- Uses LLMs to generate text descriptions of the maze and the solver's current position
-- Allows the user to input move directions and prints the maze with the updated position
+- Universal Compatibility: Accommodate ASCII mazes of various sizes.
+- Maze Visualization for LLMs: After every move, the solver produces a comprehensive map displaying the absolute position. This visualization aids in providing precise feedback to Large Language Models and enhances their problem-solving capabilities.
+- Interactive Navigation: Seamlessly input move directions, with the solver offering real-time updates on your current position in the maze.
+- Move Validations: Receive immediate feedback on the legitimacy of your move, ensuring a guided experience.
 
-## Usage:
+## Getting Started:
 
 **Clone the repository:**
 `git clone https://github.com/rfwarn/ASCII_LLM_Maze.git`<br>
 **Start the solver:** `python ASCIImaze.py`<br>
-Enter a move direction (not case sensitive).
+**Dive into the Challenge:** Provide your move direction. Inputs are flexible and not case-sensitive for user convenience.
 
 **Example:**
 
