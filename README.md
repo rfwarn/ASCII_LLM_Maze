@@ -18,6 +18,9 @@ Welcome to the ASCII maze solver - an innovative platform designed to challenge 
 **Start the solver:** `python ASCIImaze.py`<br>
 **Dive into the Challenge:** Provide your move direction. Inputs are flexible and not case-sensitive for user convenience.
 
+## Initial Prompt Directions:
+You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.
+
 **Example:**
 
 ```
