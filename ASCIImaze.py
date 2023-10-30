@@ -25,6 +25,15 @@ class Maze:
                 valid_moves.append(new_position)
         return valid_moves
 
+    def get_valid_openings(self):
+        x, y = self.current_position
+        valid_moves = []
+        for direction, (dx, dy) in {'right': (1, 0), 'left': (-1, 0), 'up': (0, 1), 'down': (0, -1)}.items():
+            new_position = (x + dx, y + dy)
+            if self.is_valid_move(new_position):
+                valid_moves.append(new_position)
+        return valid_moves
+
     def move_next(self, direction):
         x, y = self.current_position
         if direction == 'U':
@@ -39,7 +48,7 @@ class Maze:
             self.print_3x3_maze()
             return 3
         else:
-            print('incorrect input')
+            print(f'incorrect input ("{direction}"), try again')
             return False
 
     def is_solved(self):
@@ -81,13 +90,16 @@ class Maze:
             if move == 3:
                 skip = True
                 continue
+            elif not move:
+                skip = True
+                continue
             if move not in valid_moves:
                 print('That move is invalid since there is a wall there.')
                 continue
             elif move == self.start_position:
-                print('Good, here you are (on top of the starting point):')
+                print('Here you are (on top of the starting point):')
             else:
-                print('Good, here you are:')
+                print('Here you are:')
 
             self.current_position = move
 
@@ -95,7 +107,7 @@ class Maze:
 
 
 def main():
-    # Map 1. LLM had an easier time.
+    # Map 1. LLM (chatGPT 4 model) had an easier time.
     # maze_map = [
     #     '#########',
     #     '#S      #',
