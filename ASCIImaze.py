@@ -4,6 +4,9 @@ class Maze:
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
+        print("You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. " 
+            "Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go "
+            "(up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.")
     
     def get_pos(self, chr):
     # returns row, column
