@@ -1,6 +1,7 @@
 class Maze:
-    def __init__(self, maze_map):
+    def __init__(self, maze_map, show_moves):
         self.maze_map = maze_map
+        self.show_moves = show_moves
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
@@ -31,10 +32,10 @@ class Maze:
     def get_valid_openings(self):
         x, y = self.current_position
         valid_moves = []
-        for direction, (dx, dy) in {'right': (1, 0), 'left': (-1, 0), 'up': (0, 1), 'down': (0, -1)}.items():
+        for direction, (dx, dy) in {'Down': (1, 0), 'Up': (-1, 0), 'Right': (0, 1), 'Left': (0, -1)}.items():
             new_position = (x + dx, y + dy)
             if self.is_valid_move(new_position):
-                valid_moves.append(new_position)
+                valid_moves.append(direction)
         return valid_moves
 
     def move_next(self, direction):
@@ -69,10 +70,11 @@ class Maze:
         for row in arr:
             print(''.join(row))
 
-    def print_maze(self):
+    def print_maze(self, start=True):
         maze_map = self.maze_map.copy()
-        x, y = self.current_position
-        maze_map[x] = maze_map[x][:y] + '*' + maze_map[x][y+1:]
+        if start:
+            x, y = self.current_position
+            maze_map[x] = maze_map[x][:y] + '*' + maze_map[x][y+1:]
 
         for row in maze_map:
             print(''.join(row))
@@ -85,9 +87,11 @@ class Maze:
             else:
                 skip = False
             valid_moves = self.get_valid_moves()
+            if self.show_moves:
+                valid_openings = self.get_valid_openings()
+                print(f'Available moves are: {valid_openings}')
             if not valid_moves:
                 return False
-
             move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
             move = self.move_next(move)
             if move == 3:
@@ -109,7 +113,7 @@ class Maze:
         return True
 
 
-def main():
+def main(show_moves=True):
     # Map 1. LLM (chatGPT 4 model) had an easier time.
     # maze_map = [
     #     '#########',
@@ -136,7 +140,7 @@ def main():
         '#########',
     ]
 
-    maze = Maze(maze_map)
+    maze = Maze(maze_map, show_moves)
 
     if maze.solve():
         print('Maze solved!')
@@ -145,4 +149,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(show_moves=True)
