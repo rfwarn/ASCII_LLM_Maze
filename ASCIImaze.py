@@ -2,6 +2,7 @@ class Maze:
     def __init__(self, maze_map, show_moves):
         self.maze_map = maze_map
         self.show_moves = show_moves
+        self.moves = 0
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
@@ -70,9 +71,9 @@ class Maze:
         for row in arr:
             print(''.join(row))
 
-    def print_maze(self, start=True):
+    def print_maze(self):
         maze_map = self.maze_map.copy()
-        if start:
+        if self.moves != 0:
             x, y = self.current_position
             maze_map[x] = maze_map[x][:y] + '*' + maze_map[x][y+1:]
 
@@ -84,6 +85,7 @@ class Maze:
         while not self.is_solved():
             if not skip:
                 self.print_maze()
+                self.moves += 1
             else:
                 skip = False
             valid_moves = self.get_valid_moves()
@@ -94,21 +96,20 @@ class Maze:
                 return False
             move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
             move = self.move_next(move)
-            if move == 3:
+            if move == 3 or not move:
                 skip = True
                 continue
-            elif not move:
-                skip = True
-                continue
+
             if move not in valid_moves:
                 print('That move is invalid since there is a wall there.')
                 continue
-            elif move == self.start_position:
+            self.current_position = move
+            if move == self.start_position:
                 print('Here you are (on top of the starting point):')
+            elif self.is_solved():
+                print(f'Maze solved! Completed in {self.moves} moves.')
             else:
                 print('Here you are:')
-
-            self.current_position = move
 
         return True
 
@@ -141,11 +142,11 @@ def main(show_moves=True):
     ]
 
     maze = Maze(maze_map, show_moves)
-
-    if maze.solve():
-        print('Maze solved!')
-    else:
-        print('Maze could not be solved.')
+    maze.solve()
+    # if maze.solve():
+    #     print('Maze solved!')
+    # else:
+    #     print('Maze could not be solved.')
 
 
 if __name__ == '__main__':
