@@ -1,8 +1,25 @@
 class Maze:
-    def __init__(self, maze_map, show_moves):
+    def __init__(self, maze_map, show_moves=True, show_coords=True, incremental_map=False, show_path_history=False, print_path_history=True, grid_list=False):
+        # The map set in main. Should have a starting point and ending point and be boxed in with "#" as walls.
         self.maze_map = maze_map
+        # Shows the available directions of movement for each step.
         self.show_moves = show_moves
+        # Shows the coordinates of hte current position.
+        self.show_coords = show_coords
+        # gradually shows the map the further the user explores.
+        # Not implemented yet
+        self.incremental_map = incremental_map
+        # Show a representation on the map of where the user has been.
+        # Not implemented yet
+        self.show_path_history = show_path_history
+        # Records the user's valid directional moves and will be included after every move if enabled.
+        self.print_path_history = print_path_history
+        # Will create a 3x3 grid in a nexted list if set to true, otherwise it will be multiline text.
+        self.grid_list = grid_list
+        # Total move counter. Displayed when finishing maze.
         self.moves = 0
+        # History of moves
+        self.move_history = []
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
@@ -54,6 +71,7 @@ class Maze:
             return 3
         else:
             print(f'incorrect input ("{direction}"), try again')
+            self.move_history.pop()
             return False
 
     def is_solved(self):
@@ -68,14 +86,21 @@ class Maze:
         for r in maze_map:
             arr.append(r[y-1:y+2])
         print('Here is a 3x3 of your current position:')
-        for row in arr:
-            print(''.join(row))
+        if self.grid_list:
+            for n, row in enumerate(arr):
+                arr[n] = list(arr[n])
+            print(arr)
+        else:
+            for row in arr:
+                print(''.join(row))
 
     def print_maze(self):
+        path_history = '·' # • (bullet), ○ (open circle), or · (middle dot) 
+        current_pos = '*'
         maze_map = self.maze_map.copy()
         if self.moves != 0:
             x, y = self.current_position
-            maze_map[x] = maze_map[x][:y] + '*' + maze_map[x][y+1:]
+            maze_map[x] = maze_map[x][:y] + current_pos + maze_map[x][y+1:]
 
         for row in maze_map:
             print(''.join(row))
@@ -92,9 +117,11 @@ class Maze:
             if self.show_moves:
                 valid_openings = self.get_valid_openings()
                 print(f'Available moves are: {valid_openings}')
+                print(f'Path History: {"".join(self.move_history)}') if self.move_history and self.print_path_history else None
             if not valid_moves:
                 return False
             move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
+            self.move_history.append(move) if move != '3' else None
             move = self.move_next(move)
             if move == 3 or not move:
                 skip = True
@@ -102,19 +129,21 @@ class Maze:
 
             if move not in valid_moves:
                 print('That move is invalid since there is a wall there.')
+                self.move_history.pop()
                 continue
             self.current_position = move
             if move == self.start_position:
-                print('Here you are (on top of the starting point):')
+                print(f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):') # if self.show_coords else 'Here you are (on top of the starting point):')
             elif self.is_solved():
                 print(f'Maze solved! Completed in {self.moves} moves.')
             else:
-                print('Here you are:')
+                print(f'Here you are{" " + str(move) if self.show_coords else ""}:') # if self.show_coords else 'Here you are:')
 
         return True
 
 
-def main(show_moves=True):
+# def main(show_moves=True, show_coords=False, incremental_map=False, show_path_history=False):
+def main(**args):
     # Map 1. LLM (chatGPT 4 model) had an easier time.
     # maze_map = [
     #     '#########',
@@ -129,19 +158,33 @@ def main(show_moves=True):
     # ]
 
     # Map 2. Seems like LLMs are having a lot of trouble with this one.
+    # maze_map = [
+    #     '#########',
+    #     '# ##### #',
+    #     '# #   # #',
+    #     '# #E# # #',
+    #     '# # # #S#',
+    #     '#     # #',
+    #     '# ##### #',
+    #     '#       #',
+    #     '#########',
+    # ]
+
+    # Map 3. Another one that chatGPT had trouble getting through. 
+    #   The added path history and position helped significantly and experienced much less error.
     maze_map = [
         '#########',
-        '# ##### #',
+        '# ###   #',
         '# #   # #',
         '# #E# # #',
         '# # # #S#',
-        '#     # #',
+        '# #   # #',
         '# ##### #',
         '#       #',
         '#########',
     ]
 
-    maze = Maze(maze_map, show_moves)
+    maze = Maze(maze_map, **args)
     maze.solve()
     # if maze.solve():
     #     print('Maze solved!')
@@ -150,4 +193,4 @@ def main(show_moves=True):
 
 
 if __name__ == '__main__':
-    main(show_moves=True)
+    main(show_moves=True, show_coords=True)
