@@ -105,6 +105,10 @@ class Maze:
         for row in maze_map:
             print(''.join(row))
 
+    def print_response(self, response):
+        # Combines seperate lines into one response with new line seperators for direction integration with LLMs. 
+        pass
+
     def solve(self):
         skip = False
         while not self.is_solved():
