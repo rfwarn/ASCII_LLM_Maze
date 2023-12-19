@@ -18,6 +18,8 @@ class Maze:
         self.grid_list = grid_list
         # Total move counter. Displayed when finishing maze.
         self.moves = 0
+        # Total invalid move counter. Displayed when finishing maze.
+        self.invalidMoves = 0
         # History of moves
         self.move_history = []
         self.start_position = self.get_pos('S')
@@ -133,13 +135,14 @@ class Maze:
 
             if move not in valid_moves:
                 print('That move is invalid since there is a wall there.')
+                self.invalidMoves += 1
                 self.move_history.pop()
                 continue
             self.current_position = move
             if move == self.start_position:
                 print(f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):') # if self.show_coords else 'Here you are (on top of the starting point):')
             elif self.is_solved():
-                print(f'Maze solved! Completed in {self.moves} moves.')
+                print(f'Maze solved! Completed in {self.moves} moves with {self.invalidMoves} invalid moves (running into walls).')
             else:
                 print(f'Here you are{" " + str(move) if self.show_coords else ""}:') # if self.show_coords else 'Here you are:')
 
@@ -149,34 +152,34 @@ class Maze:
 # def main(show_moves=True, show_coords=False, incremental_map=False, show_path_history=False):
 def main(**args):
     # Map 1. LLM (chatGPT 4 model) had an easier time.
-    # maze_map = [
-    #     '#########',
-    #     '#S      #',
-    #     '# ##### #',
-    #     '# #     #',
-    #     '# #E# # #',
-    #     '# # # # #',
-    #     '# #   # #',
-    #     '# ##### #',
-    #     '#########',
-    # ]
+    maze_map1 = [
+        '#########',
+        '#S      #',
+        '# ##### #',
+        '# #     #',
+        '# #E# # #',
+        '# # # # #',
+        '# #   # #',
+        '# ##### #',
+        '#########',
+    ]
 
     # Map 2. Seems like LLMs are having a lot of trouble with this one.
-    # maze_map = [
-    #     '#########',
-    #     '# ##### #',
-    #     '# #   # #',
-    #     '# #E# # #',
-    #     '# # # #S#',
-    #     '#     # #',
-    #     '# ##### #',
-    #     '#       #',
-    #     '#########',
-    # ]
+    maze_map2 = [
+        '#########',
+        '# ##### #',
+        '# #   # #',
+        '# #E# # #',
+        '# # # #S#',
+        '#     # #',
+        '# ##### #',
+        '#       #',
+        '#########',
+    ]
 
     # Map 3. Another one that chatGPT had trouble getting through. 
     #   The added path history and position helped significantly and experienced much less error.
-    maze_map = [
+    maze_map3 = [
         '#########',
         '# ###   #',
         '# #   # #',
@@ -188,7 +191,21 @@ def main(**args):
         '#########',
     ]
 
-    maze = Maze(maze_map, **args)
+    # Map 4. New test
+    #   Trying new complexities
+    maze_map4 = [
+        '##############',
+        '# ###    #   #',
+        '# #   # #### #',
+        '# #E# #     S#',
+        '# # # # ######',
+        '# #   # #',
+        '# ##### #',
+        '#       #',
+        '#########',
+    ]
+
+    maze = Maze(maze_map2, **args)
     maze.solve()
     # if maze.solve():
     #     print('Maze solved!')
@@ -197,4 +214,4 @@ def main(**args):
 
 
 if __name__ == '__main__':
-    main(show_moves=True, show_coords=True)
+    main(show_moves=False, show_coords=False)
