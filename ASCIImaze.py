@@ -207,10 +207,6 @@ def main(**args):
 
     maze = Maze(maze_map2, **args)
     maze.solve()
-    # if maze.solve():
-    #     print('Maze solved!')
-    # else:
-    #     print('Maze could not be solved.')
 
 
 if __name__ == '__main__':
