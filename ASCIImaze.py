@@ -28,8 +28,8 @@ class Maze:
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
         self.output = """ You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'.
-        Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go
-        (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.\n"""
+    Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go
+    (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.\n"""
 
     def get_pos(self, chr):
         # returns row, column
@@ -212,7 +212,6 @@ class Maze:
         '#       #',
         '#########',
     ]}
-        # return maze_map2
 
 
 if __name__ == '__main__':
@@ -221,4 +220,3 @@ if __name__ == '__main__':
         print(output)
         maze.get_user_move(input('').upper())
     print(maze.output)
-    # main(show_moves=False, show_coords=False)
