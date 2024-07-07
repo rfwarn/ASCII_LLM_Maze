@@ -23,6 +23,7 @@ class Maze:
         self.invalidMoves = 0
         # History of moves
         self.move_history = []
+        self.user_move = ""
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
@@ -34,7 +35,7 @@ class Maze:
         #     "(up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.")
 
     def get_pos(self, chr):
-    # returns row, column
+        # returns row, column
         for col, row in enumerate(self.maze_map):
             pos = row.find(chr)
             if pos != -1:
@@ -61,6 +62,10 @@ class Maze:
             if self.is_valid_move(new_position):
                 valid_moves.append(direction)
         return valid_moves
+
+    def get_user_move(self, x: str):
+        self.user_move = x.upper()
+        return
 
     def move_next(self, direction):
         x, y = self.current_position
@@ -103,7 +108,7 @@ class Maze:
             self.output += '\n'.join(arr) + '\n'
 
     def print_maze(self):
-        path_history = '·' # • (bullet), ○ (open circle), or · (middle dot). Not implemented yet...
+        path_history = '·'  # • (bullet), ○ (open circle), or · (middle dot). Not implemented yet...
         current_pos = '*'
         maze_map = self.maze_map.copy()
         if self.moves != 0:
@@ -139,8 +144,9 @@ class Maze:
             self.output += "Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): "
             yield self.output
             self.output = ""
-            move = input('').upper()
             # move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
+            # move = input('').upper()
+            move = self.user_move
             self.move_history.append(move) if move != '3' else None
             move = self.move_next(move)
             if move == 3 or not move:
@@ -163,8 +169,6 @@ class Maze:
             else:
                 # print(f'Here you are{" " + str(move) if self.show_coords else ""}:') # if self.show_coords else 'Here you are:')
                 self.output += f'Here you are{" " + str(move) if self.show_coords else ""}:\n'  # if self.show_coords else 'Here you are:')
-            # yield self.output  # Yield the output string after each move
-            # self.output = ""  # Reset the output string for the next move
 
         return self.output
 
@@ -230,5 +234,6 @@ if __name__ == '__main__':
     maze = Maze("maze_map2", show_moves=False, show_coords=False)
     for output in maze.solve():
         print(output)
+        maze.get_user_move(input('').upper())
     print(maze.output)
     # main(show_moves=False, show_coords=False)
