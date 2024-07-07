@@ -30,9 +30,6 @@ class Maze:
         self.output = """ You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'.
         Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go
         (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.\n"""
-        # print("You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. "
-        #     "Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go "
-        #     "(up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.")
 
     def get_pos(self, chr):
         # returns row, column
@@ -114,9 +111,6 @@ class Maze:
         if self.moves != 0:
             x, y = self.current_position
             maze_map[x] = maze_map[x][:y] + current_pos + maze_map[x][y+1:]
-
-        # for row in maze_map:
-        #     self.output += ''.join(row) + "\n"
         self.output += '\n'.join(maze_map) + '\n'
 
     def print_response(self, response):
@@ -134,8 +128,6 @@ class Maze:
             valid_moves = self.get_valid_moves()
             if self.show_moves:
                 valid_openings = self.get_valid_openings()
-                # print(f'Available moves are: {valid_openings}')
-                # print(f'Path History: {"".join(self.move_history)}') if self.move_history and self.print_path_history else None
                 self.output += f'Available moves are: {valid_openings}\n'
                 self.output += f'Path History: {"".join(self.move_history)}\n' if self.move_history and self.print_path_history else ""
             if not valid_moves:
@@ -144,8 +136,6 @@ class Maze:
             self.output += "Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): "
             yield self.output
             self.output = ""
-            # move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
-            # move = input('').upper()
             move = self.user_move
             self.move_history.append(move) if move != '3' else None
             move = self.move_next(move)
@@ -154,26 +144,21 @@ class Maze:
                 continue
 
             if move not in valid_moves:
-                # print('That move is invalid since there is a wall there.')
                 self.output += 'That move is invalid since there is a wall there.\n'
                 self.invalidMoves += 1
                 self.move_history.pop()
                 continue
             self.current_position = move
             if move == self.start_position:
-                # print(f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):') # if self.show_coords else 'Here you are (on top of the starting point):')
                 self.output += f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):\n' # if self.show_coords else 'Here you are (on top of the starting point):')
             elif self.is_solved():
-                # print(f'Maze solved! Completed in {self.moves} moves with {self.invalidMoves} invalid moves (running into walls).')
                 self.output += f'Maze solved! Completed in {self.moves} moves with {self.invalidMoves} invalid moves (running into walls).\n'
             else:
-                # print(f'Here you are{" " + str(move) if self.show_coords else ""}:') # if self.show_coords else 'Here you are:')
                 self.output += f'Here you are{" " + str(move) if self.show_coords else ""}:\n'  # if self.show_coords else 'Here you are:')
 
         return self.output
 
     # def main(show_moves=True, show_coords=False, incremental_map=False, show_path_history=False):
-    # def maps(num):
     # Map 1. LLM (chatGPT 4 model) had an easier time.
     maps = {"maze_map1": [
         '#########',
