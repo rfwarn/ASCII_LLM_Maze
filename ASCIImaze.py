@@ -25,7 +25,8 @@ class Maze:
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
-        print("You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. " 
+        self.output = ""
+        print("You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. "
             "Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go "
             "(up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.")
     
@@ -97,7 +98,7 @@ class Maze:
                 print(''.join(row))
 
     def print_maze(self):
-        path_history = '·' # • (bullet), ○ (open circle), or · (middle dot) 
+        path_history = '·' # • (bullet), ○ (open circle), or · (middle dot). Not implemented yet...
         current_pos = '*'
         maze_map = self.maze_map.copy()
         if self.moves != 0:
@@ -108,7 +109,7 @@ class Maze:
             print(''.join(row))
 
     def print_response(self, response):
-        # Combines seperate lines into one response with new line seperators for direction integration with LLMs. 
+        # Combines seperate lines into one response with new line seperators for direction integration with LLMs.
         pass
 
     def solve(self):
