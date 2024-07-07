@@ -1,7 +1,8 @@
 class Maze:
+
     def __init__(self, maze_map, show_moves=True, show_coords=True, incremental_map=False, show_path_history=False, print_path_history=True, grid_list=False):
         # The map set in main. Should have a starting point and ending point and be boxed in with "#" as walls.
-        self.maze_map = maze_map
+        self.maze_map = Maze.maps[maze_map]
         # Shows the available directions of movement for each step.
         self.show_moves = show_moves
         # Shows the coordinates of hte current position.
@@ -131,7 +132,7 @@ class Maze:
                 # print(f'Available moves are: {valid_openings}')
                 # print(f'Path History: {"".join(self.move_history)}') if self.move_history and self.print_path_history else None
                 self.output += f'Available moves are: {valid_openings}\n'
-                self.output += f'Path History: {"".join(self.move_history)}\n' if self.move_history and self.print_path_history else None
+                self.output += f'Path History: {"".join(self.move_history)}\n' if self.move_history and self.print_path_history else ""
             if not valid_moves:
                 return False
             # Reset output to blank string for next move.
@@ -167,11 +168,10 @@ class Maze:
 
         return self.output
 
-
-# def main(show_moves=True, show_coords=False, incremental_map=False, show_path_history=False):
-def main(**args):
+    # def main(show_moves=True, show_coords=False, incremental_map=False, show_path_history=False):
+    # def maps(num):
     # Map 1. LLM (chatGPT 4 model) had an easier time.
-    maze_map1 = [
+    maps = {"maze_map1": [
         '#########',
         '#S      #',
         '# ##### #',
@@ -181,10 +181,10 @@ def main(**args):
         '# #   # #',
         '# ##### #',
         '#########',
-    ]
+    ],
 
     # Map 2. Seems like LLMs are having a lot of trouble with this one.
-    maze_map2 = [
+    "maze_map2": [
         '#########',
         '# ##### #',
         '# #   # #',
@@ -194,11 +194,11 @@ def main(**args):
         '# ##### #',
         '#       #',
         '#########',
-    ]
+    ],
 
     # Map 3. Another one that chatGPT had trouble getting through. 
     #   The added path history and position helped significantly and experienced much less error.
-    maze_map3 = [
+    "maze_map3": [
         '#########',
         '# ###   #',
         '# #   # #',
@@ -208,11 +208,11 @@ def main(**args):
         '# ##### #',
         '#       #',
         '#########',
-    ]
+    ],
 
     # Map 4. New test
     #   Trying new complexities
-    maze_map4 = [
+    "maze_map4": [
         '##############',
         '# ###    #   #',
         '# #   # #### #',
@@ -222,12 +222,13 @@ def main(**args):
         '# ##### #',
         '#       #',
         '#########',
-    ]
-
-    maze = Maze(maze_map2, **args)
-    for output in maze.solve():
-        print(output)
+    ]}
+        # return maze_map2
 
 
 if __name__ == '__main__':
-    main(show_moves=False, show_coords=False)
+    maze = Maze("maze_map2", show_moves=False, show_coords=False)
+    for output in maze.solve():
+        print(output)
+    print(maze.output)
+    # main(show_moves=False, show_coords=False)
