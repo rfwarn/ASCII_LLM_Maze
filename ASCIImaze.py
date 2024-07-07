@@ -25,11 +25,13 @@ class Maze:
         self.start_position = self.get_pos('S')
         self.end_position = self.get_pos('E')
         self.current_position = self.start_position
-        self.output = ""
-        print("You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. "
-            "Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go "
-            "(up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.")
-    
+        self.output = """ You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'.
+        Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go
+        (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.\n"""
+        # print("You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'. "
+        #     "Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go "
+        #     "(up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.")
+
     def get_pos(self, chr):
     # returns row, column
         for col, row in enumerate(self.maze_map):
@@ -73,7 +75,7 @@ class Maze:
             self.print_3x3_maze()
             return 3
         else:
-            print(f'incorrect input ("{direction}"), try again')
+            self.output += f'incorrect input ("{direction}"), try again\n'
             self.move_history.pop()
             return False
 
@@ -88,14 +90,16 @@ class Maze:
         arr = []
         for r in maze_map:
             arr.append(r[y-1:y+2])
-        print('Here is a 3x3 of your current position:')
+        self.output += 'Here is a 3x3 of your current position:\n'
         if self.grid_list:
             for n, row in enumerate(arr):
                 arr[n] = list(arr[n])
-            print(arr)
+            # print(arr)
+            self.output += str(arr)
         else:
-            for row in arr:
-                print(''.join(row))
+            # for row in arr:
+            #     print(''.join(row))
+            self.output += '\n'.join(arr) + '\n'
 
     def print_maze(self):
         path_history = '·' # • (bullet), ○ (open circle), or · (middle dot). Not implemented yet...
@@ -105,8 +109,9 @@ class Maze:
             x, y = self.current_position
             maze_map[x] = maze_map[x][:y] + current_pos + maze_map[x][y+1:]
 
-        for row in maze_map:
-            print(''.join(row))
+        # for row in maze_map:
+        #     self.output += ''.join(row) + "\n"
+        self.output += '\n'.join(maze_map) + '\n'
 
     def print_response(self, response):
         # Combines seperate lines into one response with new line seperators for direction integration with LLMs.
@@ -123,11 +128,18 @@ class Maze:
             valid_moves = self.get_valid_moves()
             if self.show_moves:
                 valid_openings = self.get_valid_openings()
-                print(f'Available moves are: {valid_openings}')
-                print(f'Path History: {"".join(self.move_history)}') if self.move_history and self.print_path_history else None
+                # print(f'Available moves are: {valid_openings}')
+                # print(f'Path History: {"".join(self.move_history)}') if self.move_history and self.print_path_history else None
+                self.output += f'Available moves are: {valid_openings}\n'
+                self.output += f'Path History: {"".join(self.move_history)}\n' if self.move_history and self.print_path_history else None
             if not valid_moves:
                 return False
-            move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
+            # Reset output to blank string for next move.
+            self.output += "Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): "
+            yield self.output
+            self.output = ""
+            move = input('').upper()
+            # move = input('Enter a move direction (U, D, L, R, or 3 (for a 3x3 of the current position)): ').upper()
             self.move_history.append(move) if move != '3' else None
             move = self.move_next(move)
             if move == 3 or not move:
@@ -135,19 +147,25 @@ class Maze:
                 continue
 
             if move not in valid_moves:
-                print('That move is invalid since there is a wall there.')
+                # print('That move is invalid since there is a wall there.')
+                self.output += 'That move is invalid since there is a wall there.\n'
                 self.invalidMoves += 1
                 self.move_history.pop()
                 continue
             self.current_position = move
             if move == self.start_position:
-                print(f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):') # if self.show_coords else 'Here you are (on top of the starting point):')
+                # print(f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):') # if self.show_coords else 'Here you are (on top of the starting point):')
+                self.output += f'Here you are (on top of the starting point{" " + str(move) if self.show_coords else ""}):\n' # if self.show_coords else 'Here you are (on top of the starting point):')
             elif self.is_solved():
-                print(f'Maze solved! Completed in {self.moves} moves with {self.invalidMoves} invalid moves (running into walls).')
+                # print(f'Maze solved! Completed in {self.moves} moves with {self.invalidMoves} invalid moves (running into walls).')
+                self.output += f'Maze solved! Completed in {self.moves} moves with {self.invalidMoves} invalid moves (running into walls).\n'
             else:
-                print(f'Here you are{" " + str(move) if self.show_coords else ""}:') # if self.show_coords else 'Here you are:')
+                # print(f'Here you are{" " + str(move) if self.show_coords else ""}:') # if self.show_coords else 'Here you are:')
+                self.output += f'Here you are{" " + str(move) if self.show_coords else ""}:\n'  # if self.show_coords else 'Here you are:')
+            # yield self.output  # Yield the output string after each move
+            # self.output = ""  # Reset the output string for the next move
 
-        return True
+        return self.output
 
 
 # def main(show_moves=True, show_coords=False, incremental_map=False, show_path_history=False):
@@ -207,7 +225,8 @@ def main(**args):
     ]
 
     maze = Maze(maze_map2, **args)
-    maze.solve()
+    for output in maze.solve():
+        print(output)
 
 
 if __name__ == '__main__':
