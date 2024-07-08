@@ -1,7 +1,7 @@
-import ASCIImaze, os
+import ASCIImaze, os, json
 import anthropic
 
-""" This is a simple terminal step by step interaction between the user, Claude, and the ASCIImaze. User will be prompted every turn in the terminal if they would like to add some feedback or anything else. If you see the error "incorrect input (""), try again" taht means Claude didn't use a tool. You may want to add in a prompt or set a system prompt to help avoid this from happening. At this time, it does not log or write any kind of file so this interaction is for demonstation purposes and you can enhance it as you'd like. I may update it later to read and write a JSON file for conversation saving and continuation. """
+""" This is a simple terminal step by step interaction between the user, Claude, and the ASCIImaze. User will be prompted every turn in the terminal if they would like to add some feedback or anything else. If you see the error "incorrect input (""), try again" taht means Claude didn't use a tool. You may want to add in a prompt or set a system prompt to help avoid this from happening. At this time, it does not log or write any kind of file so this interaction is for demonstation purposes and you can enhance it as you'd like. Added ability to read and write a JSON file for conversation saving and continuation. """
 
 # Initialize Anthropic client (you'll need to set up your API key. Currently, this look at your environment variables for "ANTHROPIC_API_KEY")
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
@@ -22,8 +22,33 @@ tools = [
         },
     }
 ]
-
+# Conversation stored here. Change name to start or resume a chat session
+conversation_name = "Claude_maze_test.json"
 messages = []
+
+# Get current directory
+path = os.path.dirname(os.path.abspath(__file__))
+conv_json = path + os.sep + "conversations" + os.sep + conversation_name
+
+
+# Load conversation
+def load_conversation():
+    # Load JSON file
+    with open(conv_json, "r") as json_file:
+        messages = json.load(json_file)
+        return messages
+
+
+if os.path.exists(conv_json):
+    messages = load_conversation()
+
+
+# Update conversation
+def write_conversation():
+    # Writing to a JSON file
+    with open(conv_json, "w") as json_file:
+        json.dump(messages, json_file, indent=4)
+    return
 
 
 def get_user_input(maze="", role="user"):
@@ -51,11 +76,10 @@ def get_llm_response():
             print(x.text)
         elif x.type == "tool_use":
             tool = x.input["move"]
-            # text += str(x.input)
-            print(x.input)
-            # messages.append({"role": "assistant", "content": x.text})
-            # messages[-1]["content"] = f"{messages[-1]['content']} {x.input}"
+            text += str(x.input)
+            # print(x.input)
     messages.append({"role": "assistant", "content": text})
+    print(text)
     return tool
 
 
@@ -64,17 +88,22 @@ def main():
 
     for output in maze.solve():
 
-        # Generate user prompt for Claude
+        # Generate user prompt for Claude and add it to messages
         get_user_input(output)
-        # print(output)
+        write_conversation()
 
         # Get Claude's response
         llm_move = get_llm_response()
+        write_conversation()
 
-        # Pass Claude's move to program
-        maze.get_user_move(llm_move)
+        if llm_move != "":
+            # Pass Claude's move to program
+            maze.get_user_move(llm_move)
+        else:
+            maze.user_move = ""
+            print("Claude did not return a move.")
 
-    # Final solved message
+    # Final solved output
     get_user_input(maze.output)
 
 
