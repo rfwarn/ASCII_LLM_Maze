@@ -1,4 +1,4 @@
-import ASCIImaze, os, json
+import ASCIImaze, os, json, uuid, datetime
 import anthropic
 
 """ This is a simple terminal step by step interaction between the user, Claude, and the ASCIImaze. User will be prompted every turn in the terminal if they would like to add some feedback or anything else. If you see the error "incorrect input (""), try again" taht means Claude didn't use a tool. You may want to add in a prompt or set a system prompt to help avoid this from happening. At this time, it does not log or write any kind of file so this interaction is for demonstation purposes and you can enhance it as you'd like. Added ability to read and write a JSON file for conversation saving and continuation. """
@@ -22,8 +22,8 @@ tools = [
         },
     }
 ]
-# Conversation stored here. Change name to start or resume a chat session
-conversation_name = "Claude_maze_test.json"
+# Conversation stored here. Change name to start or resume a chat session. Continuing conversations will need to reinput the previous moves which hasn't been implemented yet.
+conversation_name = f"Claude_maze_test_{datetime.date.today()}_{uuid.uuid4().hex}.json"
 messages = []
 
 # Get current directory
@@ -31,12 +31,16 @@ path = os.path.dirname(os.path.abspath(__file__))
 conv_json = path + os.sep + "conversations" + os.sep + conversation_name
 
 
-# Load conversation
-def load_conversation():
-    # Load JSON file
-    with open(conv_json, "r") as json_file:
-        messages = json.load(json_file)
-        return messages
+# Load conversation. Disabling for now until code is implemented to resume maze moves.
+def load_conversation(disabled=True):
+    if not disabled:
+        # Load JSON file
+        with open(conv_json, "r") as json_file:
+            messages = json.load(json_file)
+            for message in messages:
+                print(message["role"] + ": " + message["content"] + "\n")
+            return messages
+    return []
 
 
 if os.path.exists(conv_json):
@@ -76,10 +80,11 @@ def get_llm_response():
             print(x.text)
         elif x.type == "tool_use":
             tool = x.input["move"]
-            text += str(x.input)
-            # print(x.input)
+            # text += str(x.input)
+            print(x.input)
     messages.append({"role": "assistant", "content": text})
-    print(text)
+    # print(text)
+    # print(tool)
     return tool
 
 
@@ -87,6 +92,8 @@ def main():
     maze = ASCIImaze.Maze("maze_map2", show_moves=False, show_coords=False)
 
     for output in maze.solve():
+        # llm_move = ""
+        # while llm_move == "":
 
         # Generate user prompt for Claude and add it to messages
         get_user_input(output)
@@ -96,12 +103,10 @@ def main():
         llm_move = get_llm_response()
         write_conversation()
 
-        if llm_move != "":
+        maze.get_user_move(llm_move)
+        if llm_move == "":
             # Pass Claude's move to program
-            maze.get_user_move(llm_move)
-        else:
-            maze.user_move = ""
-            print("Claude did not return a move.")
+            print("{Claude did not return a move.}")
 
     # Final solved output
     get_user_input(maze.output)
