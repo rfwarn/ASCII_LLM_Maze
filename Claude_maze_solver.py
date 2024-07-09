@@ -1,4 +1,4 @@
-import ASCIImaze, os, json, uuid, datetime
+import ASCIImaze, os, json, uuid, datetime, re
 import anthropic
 
 """ This is a simple terminal step by step interaction between the user, Claude, and the ASCIImaze. User will be prompted every turn in the terminal if they would like to add some feedback or anything else. If you see the error "incorrect input (""), try again" taht means Claude didn't use a tool. You may want to add in a prompt or set a system prompt to help avoid this from happening. At this time, it does not log or write any kind of file so this interaction is for demonstation purposes and you can enhance it as you'd like. Added ability to read and write a JSON file for conversation saving and continuation. """
@@ -30,6 +30,11 @@ messages = []
 path = os.path.dirname(os.path.abspath(__file__))
 conv_json = path + os.sep + "conversations" + os.sep + conversation_name
 
+# Print helper functions
+print(
+    """Prompt 'q' to quit.\n\nInclude 'force: x' in your prompt where x is the direction to help Claude make a move if it's having a hard time using the tool. Will be delayed a turn.\n-------------\n\n"""
+)
+
 
 # Load conversation. Disabling for now until code is implemented to resume maze moves.
 def load_conversation(disabled=True):
@@ -58,8 +63,20 @@ def write_conversation():
 def get_user_input(maze="", role="user"):
     # user = "Let's try and solve this maze:"
     user = input("User prompt: ")
-    messages.append({"role": role, "content": f"User response: {user}\nMaze: {maze}"})
-    print(f"\n{maze}")
+    if user == "q":
+        return "q"
+    elif maze:
+        messages.append(
+            {"role": role, "content": f"User response: {user}\nMaze: {maze}"}
+        )
+        print(f"\n{maze}")
+    else:
+        messages.append({"role": role, "content": f"User response: {user}"})
+
+
+# def get_user_input_no_maze(role="user"):
+#     # user = "Let's try and solve this maze:"
+#     user = input("User prompt: ")
 
 
 def get_llm_response():
@@ -92,24 +109,48 @@ def main():
     maze = ASCIImaze.Maze("maze_map2", show_moves=False, show_coords=False)
 
     for output in maze.solve():
+        # Potential feature to stop looping through maze to sidebar LLM.
         # llm_move = ""
         # while llm_move == "":
 
         # Generate user prompt for Claude and add it to messages
-        get_user_input(output)
+        quit_chk = get_user_input(output)
+        if quit_chk == "q":
+            return
+        match = re.search("(force: *)([a-zA-Z])", messages[-1]["content"])
         write_conversation()
 
         # Get Claude's response
         llm_move = get_llm_response()
+        # Use user forced move. Might be delayed by a turn.
+        if llm_move == "" and match and len(match.regs) == 3:
+            llm_move = match[2]
+            print(f"(Using forced move: {llm_move})")
         write_conversation()
 
+        # Pass Claude's move to maze
         maze.get_user_move(llm_move)
         if llm_move == "":
-            # Pass Claude's move to program
             print("{Claude did not return a move.}")
 
     # Final solved output
     get_user_input(maze.output)
+    write_conversation()
+
+    # Get Claude's response
+    get_llm_response()
+    write_conversation()
+
+    while True:
+        # Generate user prompt for Claude and add it to messages. This is after the maze is completed so this can be a good opportunity to reflect on how it went.
+        quit_chk = get_user_input()
+        if quit_chk == "q":
+            return
+        write_conversation()
+
+        # Get Claude's response
+        get_llm_response()
+        write_conversation()
 
 
 if __name__ == "__main__":
