@@ -74,11 +74,6 @@ def get_user_input(maze="", role="user"):
         messages.append({"role": role, "content": f"User response: {user}"})
 
 
-# def get_user_input_no_maze(role="user"):
-#     # user = "Let's try and solve this maze:"
-#     user = input("User prompt: ")
-
-
 def get_llm_response():
     """Get a response from Claude."""
     tool = ""
@@ -141,6 +136,7 @@ def main():
     get_llm_response()
     write_conversation()
 
+    # Continue conversation after maze is completed.
     while True:
         # Generate user prompt for Claude and add it to messages. This is after the maze is completed so this can be a good opportunity to reflect on how it went.
         quit_chk = get_user_input()
