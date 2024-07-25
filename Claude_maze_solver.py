@@ -39,7 +39,7 @@ print(
 
 
 # Load conversation. Disabling for now until code is implemented to resume maze moves.
-def load_conversation(disabled=True):
+def load_conversation(disabled: bool = True) -> list:
     if not disabled:
         # Load JSON file
         with open(conv_json, "r") as json_file:
@@ -55,14 +55,14 @@ if os.path.exists(conv_json):
 
 
 # Update conversation
-def write_conversation():
+def write_conversation() -> None:
     # Writing to a JSON file
     with open(conv_json, "w") as json_file:
         json.dump(messages, json_file, indent=4)
     return
 
 
-def get_user_input(maze="", role="user"):
+def get_user_input(maze: str = "", role: str = "user") -> None:
     # user = "Let's try and solve this maze:"
     user = input("User prompt: ")
     if user == "q":
@@ -76,7 +76,7 @@ def get_user_input(maze="", role="user"):
         messages.append({"role": role, "content": f"User response: {user}"})
 
 
-def get_llm_response():
+def get_llm_response() -> str:
     """Get a response from Claude."""
     tool = ""
     text = ""
@@ -94,15 +94,12 @@ def get_llm_response():
             print(x.text)
         elif x.type == "tool_use":
             tool = x.input["move"]
-            # text += str(x.input)
             print(x.input)
     messages.append({"role": "assistant", "content": text})
-    # print(text)
-    # print(tool)
     return tool
 
 
-def main():
+def main() -> None:
     maze = ASCIImaze.Maze("maze_map2", show_moves=False, show_coords=False)
 
     for output in maze.solve():
