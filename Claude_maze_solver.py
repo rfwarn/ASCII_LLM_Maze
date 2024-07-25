@@ -6,6 +6,7 @@ import anthropic
 # Initialize Anthropic client (you'll need to set up your API key. Currently, this look at your environment variables for "ANTHROPIC_API_KEY")
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
+# Define Claude move tool
 tools = [
     {
         "name": "maze_move",
@@ -22,6 +23,7 @@ tools = [
         },
     }
 ]
+
 # Conversation stored here. Change name to start or resume a chat session. Continuing conversations will need to reinput the previous moves which hasn't been implemented yet.
 conversation_name = f"Claude_maze_test_{datetime.date.today()}_{uuid.uuid4().hex}.json"
 messages = []
