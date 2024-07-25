@@ -43,18 +43,19 @@ class Maze:
     Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go
     (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.\n"""
 
-    def get_pos(self, chr: str) -> tuple:
+    def get_pos(self, chr: str) -> tuple[int, int]:
         # returns row, column
         for col, row in enumerate(self.maze_map):
             pos = row.find(chr)
             if pos != -1:
                 return (col, pos)
+        raise Exception(f"Position not found: {chr}")
 
-    def is_valid_move(self, position) -> None:
+    def is_valid_move(self, position) -> bool:
         x, y = position
         return (
             0 <= x < len(self.maze_map)
-            and 0 <= y < len(self.maze_map[0])
+            and 0 <= y < len(self.maze_map[x])
             and self.maze_map[x][y] != "#"
         )
 
@@ -85,7 +86,7 @@ class Maze:
         self.user_move = x.upper()
         return
 
-    def move_next(self, direction: str) -> int | bool:
+    def move_next(self, direction: str) -> int | bool | tuple[int, int]:
         x, y = self.current_position
         if direction == "U":
             return (x - 1, y)
