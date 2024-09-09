@@ -62,7 +62,7 @@ def write_conversation() -> None:
     return
 
 
-def get_user_input(maze: str = "", role: str = "user") -> None:
+def get_user_input(maze: str = "", role: str = "user") -> None | str:
     # user = "Let's try and solve this maze:"
     user = input("User prompt: ")
     if user == "q":
@@ -99,8 +99,9 @@ def get_llm_response() -> str:
     return tool
 
 
-def main() -> None:
-    maze = ASCIImaze.Maze("maze_map2", show_moves=False, show_coords=False)
+def main(**kwargs: ASCIImaze) -> None:
+    # maze = ASCIImaze.Maze("maze_map2", show_moves=False, show_coords=False)
+    maze = ASCIImaze.Maze(**kwargs)
 
     for output in maze.solve():
         # Potential feature to stop looping through maze to sidebar LLM.
@@ -111,7 +112,7 @@ def main() -> None:
         quit_chk = get_user_input(output)
         if quit_chk == "q":
             return
-        match = re.search("(force: *)([a-zA-Z])", messages[-1]["content"])
+        match = re.search("(force:* *)([udlrUDLR3])", messages[-1]["content"])
         write_conversation()
 
         # Get Claude's response
@@ -149,4 +150,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # Use key word arguments
+    main(maze_map="maze_map2", show_moves=False, show_coords=False)
