@@ -12,6 +12,7 @@ class Maze:
         show_path_history=False,
         print_path_history=True,
         grid_list=False,
+        HP=0,
     ):
         # The map set in main. Should have a starting point and ending point and be boxed in with "#" as walls.
         self.maze_map = Maze.maps[maze_map]
@@ -29,6 +30,8 @@ class Maze:
         self.print_path_history = print_path_history
         # Will create a 3x3 grid in a nexted list if set to true, otherwise it will be multiline text.
         self.grid_list = grid_list
+        # Hit points. -1 when running into walls.
+        self.HP = HP
         # Total move counter. Displayed when finishing maze.
         self.moves = 0
         # Total invalid move counter. Displayed when finishing maze.
@@ -39,9 +42,9 @@ class Maze:
         self.start_position = self.get_pos("S")
         self.end_position = self.get_pos("E")
         self.current_position = self.start_position
-        self.output = """ You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'.
+        self.output = f""" You have your starting position 'S', the end position 'E' and your current position will be indicated after every move with '*'.
     Walls are labeled as '#' and are impenetrable. This is done one turn at a time giving me the direction you would like to go
-    (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.\n"""
+    (up 'U', down 'D', left 'L', right 'R'). You can also request a 3x3 grid of the immediate area around you with '3'.{" You have " + str(HP) + " HP to start with and you lose 1 everytime you run into a wall. The you lose when when your HP gets to 0" if HP > 0 else ""}\n"""
 
     def get_pos(self, chr: str) -> tuple[int, int]:
         # returns row, column
@@ -168,6 +171,13 @@ class Maze:
             if move not in valid_moves:
                 self.output += "That move is invalid since there is a wall there.\n"
                 self.invalidMoves += 1
+                if self.HP == 1:
+                    self.output += "You have 0 HP. You lost.\n"
+                    self.HP -= 1
+                    break
+                elif self.HP > 0:
+                    self.HP -= 1
+                    self.output += f"You lost an HP, you have {self.HP} HP left.\n"
                 self.move_history.pop()
                 continue
             self.current_position = move
@@ -288,7 +298,7 @@ class Maze:
 
 
 if __name__ == "__main__":
-    maze = Maze("maze_map2", show_moves=False, show_coords=False)
+    maze = Maze("maze_map2", show_moves=False, show_coords=False, HP=5)
     for output in maze.solve():
         print(output)
         maze.get_user_move(input("").upper())

@@ -112,7 +112,7 @@ def main(**kwargs: ASCIImaze) -> None:
         quit_chk = get_user_input(output)
         if quit_chk == "q":
             return
-        match = re.search("(force:* *)([udlrUDLR3])", messages[-1]["content"])
+        match = re.search("(force[: ] *)([udlrUDLR3])", messages[-1]["content"], re.IGNORECASE)
         write_conversation()
 
         # Get Claude's response
@@ -151,4 +151,4 @@ def main(**kwargs: ASCIImaze) -> None:
 
 if __name__ == "__main__":
     # Use key word arguments
-    main(maze_map="maze_map2", show_moves=False, show_coords=False)
+    main(maze_map="maze_map2", show_moves=False, show_coords=False, HP=5)
